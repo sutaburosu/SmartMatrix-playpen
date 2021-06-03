@@ -1,0 +1,10 @@
+{
+  "makefile.extensionOutputFolder": "./.vscode",
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/home/steve/code/arduino/SmartMatrix/playpen/build",
+      "binaryPath": "/home/steve/code/arduino/SmartMatrix/playpen/build/playpen.elf",
+      "binaryArgs": []
+    }
+  ]
+}

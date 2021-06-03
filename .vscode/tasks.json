@@ -1,0 +1,50 @@
+{
+    "tasks": [
+      {
+        "label": "Build",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "command": "make",
+        "args": [
+          "-j10",
+          "all"
+        ]
+      },
+      {
+        "label": "Clean",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "command": "make",
+        "args": [
+          "clean"
+        ]
+      },
+      {
+        "label": "Upload (teensy.exe)",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "command": "make",
+        "args": [
+          "-j10",
+          "upload"
+        ]
+      }
+    ],
+    "version": "2.0.0",
+    "type": "shell",
+    "problemMatcher": "$gcc",
+    "presentation": {
+      "echo": true,
+      "clear": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared",
+      "showReuseMessage": false
+    }
+  }

@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "VisualTeensy",
+            "includePath": [
+                "/opt/arduino-1.8.15/hardware/teensy/avr/cores/teensy4/**",
+                "/opt/arduino-1.8.15/hardware/teensy/avr/libraries/**",
+                "${HOME}/Arduino/libraries/**",
+                "lib/**"
+            ],
+            "forcedInclude": [
+                "/opt/arduino-1.8.15/hardware/teensy/avr/cores/teensy4/Arduino.h"
+            ],
+            "defines": [
+                "__IMXRT1062__",
+                "TEENSYDUINO=154",
+                "F_CPU=600000000",
+                "USB_SERIAL",
+                "LAYOUT_US_ENGLISH",
+                "ARDUINO=10815"
+            ],
+            "compilerPath": "/opt/arduino-1.8.15/hardware/tools/arm/bin/arm-none-eabi-gcc",
+            "intelliSenseMode": "gcc-arm",
+            "cppStandard": "gnu++14",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
