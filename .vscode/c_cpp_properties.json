@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "VisualTeensy",
+            "name": "Teensy4.1",
             "includePath": [
                 "/opt/arduino-1.8.15/hardware/teensy/avr/cores/teensy4/**",
                 "/opt/arduino-1.8.15/hardware/teensy/avr/libraries/**",
