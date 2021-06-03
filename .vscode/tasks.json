@@ -8,7 +8,7 @@
         },
         "command": "make",
         "args": [
-          "-j10",
+          "-j",
           "all"
         ]
       },
@@ -20,6 +20,7 @@
         },
         "command": "make",
         "args": [
+          "-j",
           "clean"
         ]
       },
@@ -31,7 +32,7 @@
         },
         "command": "make",
         "args": [
-          "-j10",
+          "-j",
           "upload"
         ]
       }

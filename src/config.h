@@ -7,6 +7,7 @@
 //#define SMARTMATRIX_USE_PSRAM
 #include "MatrixHardware_Teensy4_ShieldV5_RBG.h"
 #include <SmartMatrix.h>
+#include "images.h"
 #include "gems.h"
 
 #define LIFE_TRAILS true
@@ -22,3 +23,4 @@ const uint8_t kDmaBufferRows = 4;         // known working: 2-4, use 2 to save R
 const uint8_t kPanelType = SM_PANELTYPE_HUB75_64ROW_MOD32SCAN;  // Choose the configuration that matches your panels.  See more details in MatrixCommonHub75.h and the docs: https://github.com/pixelmatix/SmartMatrix/wiki
 
 extern SMLayerBackground<rgb24, 0> backgroundLayer;
+extern rgb24 sweetie16[16];

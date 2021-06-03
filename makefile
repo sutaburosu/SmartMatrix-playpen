@@ -11,10 +11,10 @@
 #******************************************************************************
 
 # Uncomment this to for a silent build (except warnings and errors)
-QUIET            := \#
-
+#QUIET            := \#
 
 # Keep the settings in `.vscode/c_cpp_properties.json` synced with these
+
 TARGET_NAME      := playpen
 BOARD_ID         := TEENSY41
 
@@ -305,7 +305,7 @@ $(USR_BIN)/%.o: $(USR_SRC)/%.cpp
 	@echo -n $(COL_RESET)
 
 $(USR_BIN)/%.o: $(USR_SRC)/%.ino
-	@$(QUIET)echo $(COL_SRC)USER [CPP] $(notdir $<)
+	@$(QUIET)echo $(COL_SRC)USER [INO] $(notdir $<)
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o "$@" -x c++ -c $<
 	@echo -n $(COL_RESET)
