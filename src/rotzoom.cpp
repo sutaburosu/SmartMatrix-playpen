@@ -15,10 +15,10 @@ void rotzoom() {
   int32_t ydx = sin16(ms * 3);
   int32_t xdy = -sin16(ms * 3);
   int32_t ydy = cos16(ms * 3);
-  xdx = ( cos(ms / 3000.f) * (sin(ms / 1900.f)/3.f + .75f)) * 65535.f;
-  xdy = ( sin(ms / 3000.f) * (sin(ms / 1900.f)/3.f + .75f)) * 65535.f;
-  ydx = (-sin(ms / 3000.f) * (sin(ms / 1900.f)/3.f + .75f)) * 65535.f;
-  ydy = ( cos(ms / 3000.f) * (sin(ms / 1900.f)/3.f + .75f)) * 65535.f;
+  xdx = ( cos(ms / 3000.f) * (sin(ms / 1900.f)/2.5f + .7f)) * 65535.f;
+  xdy = ( sin(ms / 3000.f) * (sin(ms / 1900.f)/2.5f + .7f)) * 65535.f;
+  ydx = (-sin(ms / 3000.f) * (sin(ms / 1900.f)/2.5f + .7f)) * 65535.f;
+  ydy = ( cos(ms / 3000.f) * (sin(ms / 1900.f)/2.5f + .7f)) * 65535.f;
 
   // move the centre of rotation
   uint32_t xstart = -xdx * (kMatrixWidth + 1) / 2;

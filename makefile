@@ -11,7 +11,7 @@
 #******************************************************************************
 
 # Uncomment this to for a silent build (except warnings and errors)
-#QUIET            := \#
+QUIET            := \#
 
 # Keep the settings in `.vscode/c_cpp_properties.json` synced with these
 

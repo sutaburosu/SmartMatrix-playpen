@@ -12,6 +12,9 @@ function TIC()cls()math.randomseed(1)q(0,0,256)t=t+1
 end
 */
 
+#pragma GCC push_options
+#pragma GCC optimize "-Ofast"
+
 uint32_t xorshift32(uint32_t state) {
   state ^= state << 13;
   state ^= state >> 17;
@@ -60,3 +63,4 @@ void FMS_Cat_quadtree() {
   FMS_Cat_q(0, 0, 256, t);
   t++;
 }
+#pragma GCC pop_options

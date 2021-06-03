@@ -84,7 +84,6 @@ bool getGrid(byte grid[][BYTES_X], int x, int y) {
   if (x < 0 || x >= X_RES) return result;
   if (y < 0 || y >= Y_RES) return result;
   xIndex = x >> 3;
-  // xBit = x - (xIndex << 3);
   xBit = x & 7;
   result = (bool) bitRead(grid[y][xIndex], xBit);
   return result;

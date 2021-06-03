@@ -25,6 +25,7 @@ uint16_t XY (uint8_t x, uint8_t y) {
 
 void setup() {
   Serial.begin(115200);
+  // while (!Serial) {};
   matrix.addLayer(&backgroundLayer);
   matrix.begin();
   // matrix.setRefreshRate(300);
