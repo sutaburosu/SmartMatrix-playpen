@@ -11,7 +11,8 @@ const uint16_t kHalfHeight = kMatrixHeight / 2;
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
 
-void exoticorn_tunnel1(rgb24 *led) {
+void exoticorn_tunnel1() {
+  rgb24 *led = rgb24leds;
   float o, q, w, r, z, s, t = millis() / 2000.f;
   o = sinf(t) * .8f;
   for (int16_t y = -kHalfHeight; y < kHalfHeight; y++) {
@@ -35,7 +36,8 @@ float n(float x) {
   return (sinf(x) + sinf(x * .7f)) / 2.f;
 }
 
-void exoticorn_tunnel2(rgb24 *led) {
+void exoticorn_tunnel2() {
+  rgb24 *led = rgb24leds;
   backgroundLayer.fillRectangle(0, 0, kMatrixWidth, kMatrixHeight, rgb24(0, 0, 0));
   float t = millis() / 10.f;
   for (float i = 1000; i >= 10; i--) {
@@ -51,7 +53,8 @@ void exoticorn_tunnel2(rgb24 *led) {
 }
 
 
-void exoticorn_tunnel3(rgb24 *led) {
+void exoticorn_tunnel3() {
+  rgb24 *led = rgb24leds;
   byte c;
   float t, z, q, w;
   uint8_t path_width = 139;

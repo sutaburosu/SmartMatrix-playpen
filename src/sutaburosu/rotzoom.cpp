@@ -1,4 +1,5 @@
 #include "config.h"
+#include "sutaburosu/images.h"
 
 #define TILE_SIZE 32
 

@@ -10,14 +10,14 @@ uint32_t seed = 322524;
 
 const byte BYTES_X = kMatrixWidth / 8;
 const uint16_t bytes = BYTES_X * kMatrixHeight;
-byte grid[Y_RES][BYTES_X];
-byte tempGrid[Y_RES][BYTES_X];
+byte grid[kMatrixHeight][BYTES_X];
+byte tempGrid[kMatrixHeight][BYTES_X];
 
 
 void paintRasterGrid(byte src[][BYTES_X], bool blue) {
   byte *grid = (byte *) src;
-  for (uint16_t y = 0; y < Y_RES; y++) {
-    for (uint16_t x = 0; x < X_RES; x += 8) {
+  for (uint16_t y = 0; y < kMatrixHeight; y++) {
+    for (uint16_t x = 0; x < kMatrixWidth; x += 8) {
       byte gridval = *grid++;
       for (uint8_t bitpos = 0; bitpos < 8; bitpos++) {
         if (gridval & 1) {
@@ -41,7 +41,7 @@ void randomFillArray(byte *gPtr, uint32_t seed) {
   PRINT_INFO("Seed: ");
   PRINT_INFO(seed);
   randomSeed(seed);
-  for (int i = 0; i < X_RES / 8 * Y_RES; i++) {
+  for (int i = 0; i < kMatrixWidth / 8 * kMatrixHeight; i++) {
     *gPtr++ = random(255) & random(255) & random(255);
   }
   paintRasterGrid(grid, false);
@@ -67,8 +67,8 @@ void setGrid(byte grid[][BYTES_X], int x, int y, bool value) {
   int   xIndex;
   byte  xBit;
 
-  if (x < 0 || x >= X_RES) return;
-  if (y < 0 || y >= Y_RES) return;
+  if (x < 0 || x >= kMatrixWidth) return;
+  if (y < 0 || y >= kMatrixHeight) return;
   xIndex = x >> 3;
   // xBit = x - (xIndex << 3);
   xBit = x & 7;
@@ -87,8 +87,8 @@ bool getGrid(byte grid[][BYTES_X], int x, int y) {
   bool  result;
 
   result = false;
-  if (x < 0 || x >= X_RES) return result;
-  if (y < 0 || y >= Y_RES) return result;
+  if (x < 0 || x >= kMatrixWidth) return result;
+  if (y < 0 || y >= kMatrixHeight) return result;
   xIndex = x >> 3;
   xBit = x & 7;
   result = (bool) bitRead(grid[y][xIndex], xBit);
@@ -142,8 +142,8 @@ uint32_t hash(byte * src, uint16_t length) {
 
 void stepTime(void) {
   bool  result;
-  for (int y = 0; y < Y_RES; y++) {
-    for (int x = 0; x < X_RES; x++) {
+  for (int y = 0; y < kMatrixHeight; y++) {
+    for (int x = 0; x < kMatrixWidth; x++) {
       result = updatePoint(x, y);
       setGrid(tempGrid, x, y, result);
     }

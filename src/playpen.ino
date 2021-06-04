@@ -43,9 +43,9 @@ void loop() {
   switch (effect) {
     case 0: life(); break;
     case 1: rotzoom(); break;
-    case 2: exoticorn_tunnel1(rgb24leds); break;
-    case 3: exoticorn_tunnel2(rgb24leds); break;
-    case 4: exoticorn_tunnel3(rgb24leds); break;
+    case 2: exoticorn_tunnel1(); break;
+    case 3: exoticorn_tunnel2(); break;
+    case 4: exoticorn_tunnel3(); break;
     case 5: FMS_Cat_quadtree(); break;
     case 6: stereo_tartan(); break;
     case 7: analogueClock(); break;
