@@ -1,10 +1,10 @@
 #include "config.h"
 #include "life.h"
-#include "rotzoom.h"
 #include "exoticorn_tunnel.h"
 #include "FMS_Cat_quadtree.h"
 #include "stereo_tartan.h"
 #include "sutaburosu/analogueClock.h"
+#include "sutaburosu/rotzoom.h"
 
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
