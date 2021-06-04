@@ -29,7 +29,7 @@ LIBS_LOCAL_BASE  := lib
 LIBS_LOCAL       := 
 
 LIBS_CORE_BASE   := $(ARDUINO_BASE)/hardware/teensy/avr/libraries
-LIBS_CORE        := SPI
+LIBS_CORE        := SPI Time
 
 CORE_BASE        := $(ARDUINO_BASE)/hardware/teensy/avr/cores/teensy4
 GCC_BASE         := $(ARDUINO_BASE)/hardware/tools/arm/bin

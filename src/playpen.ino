@@ -4,6 +4,7 @@
 #include "exoticorn_tunnel.h"
 #include "FMS_Cat_quadtree.h"
 #include "stereo_tartan.h"
+#include "sutaburosu/analogueClock.h"
 
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
@@ -17,6 +18,9 @@ rgb24 sweetie16[] = {
   rgb24(0x29, 0x36, 0x6f), rgb24(0x3b, 0x5d, 0xc9), rgb24(0x41, 0xa6, 0xf6), rgb24(0x73, 0xef, 0xf7),
   rgb24(0xf4, 0xf4, 0xf4), rgb24(0x94, 0xb0, 0xc2), rgb24(0x56, 0x6c, 0x86), rgb24(0x33, 0x3c, 0x57)
 };
+
+CRGB *crgbleds;
+rgb24 *rgb24leds;
 
 
 void setup() {
@@ -33,12 +37,14 @@ void setup() {
 void loop() {
   backgroundLayer.swapBuffers(true);
   rgb24 *led = backgroundLayer.backBuffer();
-  static uint32_t effect = 3;
+  rgb24leds = led;
+  crgbleds = (CRGB *) led;
+  static uint32_t effect = 7;
   static uint32_t last_change_ms;
 
-  // if (((millis() / 64) % 64) == 0) effect = random(7);
+  // if (((millis() / 64) % 64) == 0) effect = random(8);
   if (millis() - last_change_ms > 10000) {
-    effect = (effect + 1) % 7;
+    effect = (effect + 1) % 8;
     last_change_ms = millis();
   }
 
@@ -51,6 +57,7 @@ void loop() {
     case 4: exoticorn_tunnel3(led); break;
     case 5: FMS_Cat_quadtree(); break;
     case 6: stereo_tartan(); break;
+    case 7: analogueClock(); break;
     default: break;
   }
   uint64_t t2 = micros();

@@ -30,7 +30,7 @@ end
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
 void stereo_tartan() {
-  float scale = MIN(kMatrixWidth, kMatrixHeight) / 4.f;
+  float scale = min(kMatrixWidth, kMatrixHeight) / 4.f;
   float p = 3.14159265358f / scale;
   uint16_t o = kMatrixWidth / 2;
   uint16_t n = kMatrixHeight / 2;
