@@ -7,6 +7,7 @@
 //#define SMARTMATRIX_USE_PSRAM
 #include "MatrixHardware_Teensy4_ShieldV5_RBG.h"
 #include <SmartMatrix.h>
+#include "palettes.h"
 #include "sutaburosu/images.h"
 // #include "gems.h"
 

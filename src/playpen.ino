@@ -11,14 +11,6 @@ SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth,
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(realBackgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, 0);
 SMLayerBackground<RGB_TYPE(COLOR_DEPTH), 0> backgroundLayer = realBackgroundLayer;
 
-// https://github.com/nesbox/TIC-80/wiki/palette
-rgb24 sweetie16[] = {
-  rgb24(0x1a, 0x1c, 0x2c), rgb24(0x5d, 0x27, 0x5d), rgb24(0xb1, 0x3e, 0x53), rgb24(0xef, 0x7d, 0x57),
-  rgb24(0xff, 0xcd, 0x75), rgb24(0xa7, 0xf0, 0x70), rgb24(0x38, 0xb7, 0x64), rgb24(0x25, 0x71, 0x79),
-  rgb24(0x29, 0x36, 0x6f), rgb24(0x3b, 0x5d, 0xc9), rgb24(0x41, 0xa6, 0xf6), rgb24(0x73, 0xef, 0xf7),
-  rgb24(0xf4, 0xf4, 0xf4), rgb24(0x94, 0xb0, 0xc2), rgb24(0x56, 0x6c, 0x86), rgb24(0x33, 0x3c, 0x57)
-};
-
 CRGB *crgbleds;
 rgb24 *rgb24leds;
 
@@ -36,14 +28,13 @@ void setup() {
 
 void loop() {
   backgroundLayer.swapBuffers(true);
-  rgb24 *led = backgroundLayer.backBuffer();
-  rgb24leds = led;
-  crgbleds = (CRGB *) led;
-  static uint32_t effect = 7;
+  rgb24leds = backgroundLayer.backBuffer();
+  crgbleds = (CRGB *) rgb24leds;
+  static uint32_t effect = 5;
   static uint32_t last_change_ms;
 
   // if (((millis() / 64) % 64) == 0) effect = random(8);
-  if (millis() - last_change_ms > 10000) {
+  if (millis() - last_change_ms > 100000) {
     effect = (effect + 1) % 8;
     last_change_ms = millis();
   }
@@ -52,9 +43,9 @@ void loop() {
   switch (effect) {
     case 0: life(); break;
     case 1: rotzoom(); break;
-    case 2: exoticorn_tunnel1(led); break;
-    case 3: exoticorn_tunnel2(led); break;
-    case 4: exoticorn_tunnel3(led); break;
+    case 2: exoticorn_tunnel1(rgb24leds); break;
+    case 3: exoticorn_tunnel2(rgb24leds); break;
+    case 4: exoticorn_tunnel3(rgb24leds); break;
     case 5: FMS_Cat_quadtree(); break;
     case 6: stereo_tartan(); break;
     case 7: analogueClock(); break;
