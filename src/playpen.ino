@@ -1,6 +1,6 @@
 #include "config.h"
-#include "life.h"
-#include "exoticorn_tunnel.h"
+#include "jimLee/life.h"
+#include "exoticorn/exoticorn_tunnel.h"
 #include "FMS_Cat/quadtree.h"
 #include "Incubus/stereo_tartan.h"
 #include "sutaburosu/analogueClock.h"

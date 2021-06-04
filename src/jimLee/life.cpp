@@ -1,6 +1,6 @@
 /* https://forum.arduino.cc/t/the-fastest-way-to-move-a-block-of-ram/865841 */
 
-#include "config.h"
+#include "../config.h"
 
 #define PRINT_INFO(a) {}
 // #define PRINT_INFO(a) Serial.println(a)

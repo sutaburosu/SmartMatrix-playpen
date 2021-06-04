@@ -3,7 +3,7 @@
  & https://tic80.com/play?cart=1873
 */
 
-#include "config.h"
+#include "../config.h"
 
 const uint16_t kHalfWidth = kMatrixWidth / 2;
 const uint16_t kHalfHeight = kMatrixHeight / 2;
