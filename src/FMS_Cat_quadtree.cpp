@@ -1,16 +1,6 @@
-#include "config.h"
+/* https://tic80.com/play?cart=1868 */
 
-/*
-t,R=0,math.random
-function q(x,y,s)for i=0,3 do
-u,v=x+i%2*s,y+i//2*s
-if R(2,16)<s then
-q(u,v,s/2)else({rect,rectb})[R(2)]((u+t*(v//16%3-3))%512-99,(v+t)%512-99,s-1,s-1,((v-t)/8%9+R()-5))end
-end
-end
-function TIC()cls()math.randomseed(1)q(0,0,256)t=t+1
-end
-*/
+#include "config.h"
 
 uint32_t quadtree_rand = 0;
 

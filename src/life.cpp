@@ -1,5 +1,11 @@
+/* https://forum.arduino.cc/t/the-fastest-way-to-move-a-block-of-ram/865841 */
+
 #include "config.h"
 
+#define PRINT_INFO(a) {}
+// #define PRINT_INFO(a) Serial.println(a)
+
+#define LIFE_TRAILS true
 uint32_t seed = 322524;
 
 const byte BYTES_X = kMatrixWidth / 8;
@@ -32,8 +38,8 @@ void paintRasterGrid(byte src[][BYTES_X], bool blue) {
 
 
 void randomFillArray(byte *gPtr, uint32_t seed) {
-  Serial.print("Seed: ");
-  Serial.print(seed);
+  PRINT_INFO("Seed: ");
+  PRINT_INFO(seed);
   randomSeed(seed);
   for (int i = 0; i < X_RES / 8 * Y_RES; i++) {
     *gPtr++ = random(255) & random(255) & random(255);
@@ -157,16 +163,16 @@ void stepTime(void) {
   if (match) {
     consecutives++;
     if (consecutives >= 240) {
-      Serial.print(" frames: ");
-      Serial.println(seed_frames);
+      PRINT_INFO(" frames: ");
+      PRINT_INFO(seed_frames);
       // start with the next seed
       randomFillArray((byte *) tempGrid, ++seed);
       seed_frames = 0;
     }
     if (consecutives >= 500) {
       if (consecutives % 500 == 0) {
-        Serial.print(" Seed: ");
-        Serial.println(seed);
+        PRINT_INFO(" Seed: ");
+        PRINT_INFO(seed);
       }
       delay(250);
     }

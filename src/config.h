@@ -10,8 +10,6 @@
 #include "images.h"
 #include "gems.h"
 
-#define LIFE_TRAILS true
-
 #define X_RES 128
 #define Y_RES 64
 
