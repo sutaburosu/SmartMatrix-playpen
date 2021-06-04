@@ -37,7 +37,6 @@ float n(float x) {
 }
 
 void exoticorn_tunnel2() {
-  rgb24 *led = rgb24leds;
   backgroundLayer.fillRectangle(0, 0, kMatrixWidth, kMatrixHeight, rgb24(0, 0, 0));
   float t = millis() / 10.f;
   for (float i = 1000; i >= 10; i--) {
