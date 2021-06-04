@@ -1,6 +1,6 @@
 /* https://tic80.com/play?cart=1868 */
 
-#include "config.h"
+#include "../config.h"
 
 uint32_t quadtree_rand = 0;
 

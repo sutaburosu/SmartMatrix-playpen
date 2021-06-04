@@ -1,7 +1,7 @@
 #include "config.h"
 #include "life.h"
 #include "exoticorn_tunnel.h"
-#include "FMS_Cat_quadtree.h"
+#include "FMS_Cat/quadtree.h"
 #include "stereo_tartan.h"
 #include "sutaburosu/analogueClock.h"
 #include "sutaburosu/rotzoom.h"
