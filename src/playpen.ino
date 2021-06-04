@@ -1,8 +1,9 @@
 #include "config.h"
-#include "jimLee/life.h"
+#include "atuline/mandelzoom.h"
 #include "exoticorn/exoticorn_tunnel.h"
 #include "FMS_Cat/quadtree.h"
 #include "Incubus/stereo_tartan.h"
+#include "jimLee/life.h"
 #include "sutaburosu/analogueClock.h"
 #include "sutaburosu/rotzoom.h"
 
@@ -30,12 +31,12 @@ void loop() {
   backgroundLayer.swapBuffers(true);
   rgb24leds = backgroundLayer.backBuffer();
   crgbleds = (CRGB *) rgb24leds;
-  static uint32_t effect = 5;
+  static uint32_t effect = 8;
   static uint32_t last_change_ms;
 
-  // if (((millis() / 64) % 64) == 0) effect = random(8);
+  // if (((millis() / 64) % 64) == 0) effect = random(9);
   if (millis() - last_change_ms > 100000) {
-    effect = (effect + 1) % 8;
+    effect = (effect + 1) % 9;
     last_change_ms = millis();
   }
 
@@ -49,6 +50,7 @@ void loop() {
     case 5: FMS_Cat_quadtree(); break;
     case 6: stereo_tartan(); break;
     case 7: analogueClock(); break;
+    case 8: mandelzoom(); break;
     default: break;
   }
   uint64_t t2 = micros();

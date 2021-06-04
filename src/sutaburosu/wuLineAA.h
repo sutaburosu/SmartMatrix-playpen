@@ -6,4 +6,3 @@ void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2);
 void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col);
 void wuVectorAA(const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta, CRGB *col);
 void wuVectorAA8(const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta);
-CRGB ColorFromPaletteExtended(const CRGBPalette16& pal, uint16_t index, uint8_t brightness, TBlendType blendType);
