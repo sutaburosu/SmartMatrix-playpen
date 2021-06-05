@@ -47,7 +47,7 @@ void stereo_tartan() {
       float u = e * x - d * y;
       float v = d * q - e * z;
       backgroundLayer.drawPixel(o+s, n+t, sweetie16[
-        (int(floor(atan2f(e*q + d*z, sqrtf(u*u + v*v))/p)) ^ int(floor(atan2f(u, v)/p))) & 0xf
+        (int(floorf(atan2f(e*q + d*z, sqrtf(u*u + v*v))/p)) ^ int(floorf(atan2f(u, v)/p))) & 0xf
       ]);
     }
   }

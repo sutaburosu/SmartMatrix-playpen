@@ -33,19 +33,19 @@ void exoticorn_tunnel1() {
 
 
 float n(float x) {
-  return (sinf(x) + sinf(x * .7f)) / 2.f;
+  return (sin(x) + sin(x * .7f)) / 2.f;
 }
 
 void exoticorn_tunnel2() {
   backgroundLayer.fillRectangle(0, 0, kMatrixWidth, kMatrixHeight, rgb24(0, 0, 0));
   float t = millis() / 10.f;
   for (float i = 500; i >= 10; i--) {
-    float p = i + floorf(t);
+    float p = i + floor(t);
     float z = i - t + int(t);
     float f = 4000.f / z;
     float r = 1.f + (int(p) % 4) / 4.f;
-    float x = n(p / 50.f) - n(t / 50.f) + sinf(p + 0.1f) * r;
-    float y = n(p / 50.f + 9.f) - n(t/ 50.f + 9.1f) + sinf(p + 11.f) * r;
+    float x = n(p / 50.f) - n(t / 50.f) + sin(p + 0.1f) * r;
+    float y = n(p / 50.f + 9.f) - n(t/ 50.f + 9.1f) + sin(p + 11.f) * r;
     byte c = max(0, 5 - z / 100.f);
     backgroundLayer.fillCircle(kHalfWidth + x*f, kHalfHeight + y*f, f / 15.f * powf(r, 4.f), sweetie16[(c ^ ((int(p) % 4) * 8)) & 0xf]);
   }

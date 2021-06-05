@@ -13,7 +13,7 @@ float xmin, ymin, xmax, ymax;
 float dx;                       // Delta x is mapped to the matrix size.
 float dy;                       // Delta y is mapped to the matrix size.
 
-int maxIterations = 128;        // How many iterations per pixel before we give up.
+int maxIterations = 64;        // How many iterations per pixel before we give up.
 float maxCalc = 16.0;            // How big is each calculation allowed to be before we give up.
 
 void resize();
@@ -27,30 +27,30 @@ void mandelzoom() {
   mandel();                               // Calculate and display that window.
   
   // Let's get some real nice palettes and palette transitioning happening.
-  EVERY_N_MILLISECONDS(100) {
-    uint8_t maxChanges = 24;
+  EVERY_N_MILLISECONDS(20) {
+    uint8_t maxChanges = 16;
     nblendPaletteTowardPalette(currentPalette, targetPalette, maxChanges);   // AWESOME palette blending capability.
   }
 
-  EVERY_N_SECONDS(5) {                                        // Change the target palette to a random one every 5 seconds.
-
-    targetPalette = CRGBPalette16(CHSV(random8(), 255, random8(128, 255)),
-                                  CHSV(random8(), 255, random8(128, 255)),
-                                  CHSV(random8(), 192, random8(128, 255)),
-                                  CHSV(random8(), 255, random8(128, 255)));
+  EVERY_N_SECONDS(1) {                                        // Change the target palette to a random one every 5 seconds.
+    // uint8_t i = random8() % 16;
+    for (uint8_t i = 0; i < 16; i++) {
+      // targetPalette[i] = CHSV(random8(), 255, random8(224, 255));
+      targetPalette[i] = CRGB(random8(), random8(), random8());
+    }
   }
 }
 
 void resize() {                           // Resize the minimum and maximum values on the fly to display.
 
 // Let's animate our Mandelbrot set.
-  zoOm = 9000. * fabsf(sinf(millis()/2000.f))+200.f;  // Change zoom to 200 up to 5200
+  zoOm = 9000. * fabsf(sin(millis()/2000.f))+200.f;  // Change zoom to 200 up to 5200
   reAl = -0.94299;                               // Use the location as shown at https://www.youtube.com/watch?v=V2dlac4WSic
   imAg = 0.3162;                                 // His code is https://github.com/zranger1/PixelblazePatterns/blob/master/mandelbrot2D.js
                                                  // And I'm not sure how he's getting the animation he does though.
   
-//  reAl = reAl + sin(millis()/500.)/zoOm*.10;
-//  imAg = imAg + sin(millis()/400.)/zoOm*.10;
+ reAl = reAl + sin(millis()/500.f)*500.f/zoOm;
+ imAg = imAg + sin(millis()/400.f)*300.f/zoOm;
 
 
 // These adjustments make the pan and zoom somewhat compatible with https://mandel.gart.nz/#/
@@ -71,6 +71,8 @@ void resize() {                           // Resize the minimum and maximum valu
 
 
 void mandel() {                            // Calculate and display the Mandelbrot set for the current window.
+  static uint16_t hue_rot = 0;
+  hue_rot += 128;
   CRGB *leds = (CRGB *) rgb24leds;
   // Start y
   float y = ymin;
@@ -103,7 +105,7 @@ void mandel() {                            // Calculate and display the Mandelbr
       if (iter == maxIterations) {
         *leds++ = CRGB::Black;            // Calculation kept on going, so it was within the set.
       } else {
-        *leds++ = ColorFromPaletteExtended(currentPalette, iter*65535.0/maxIterations, 255-iter, LINEARBLEND);
+        *leds++ = ColorFromPaletteExtended(currentPalette, iter*65535.0/maxIterations + hue_rot, 255-iter/16, LINEARBLEND);
       }
       x += dx;
     }

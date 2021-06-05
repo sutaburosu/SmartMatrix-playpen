@@ -185,6 +185,11 @@ void stepTime(void) {
 
 
 void life() {
+  static bool setup  = true;
+  if (setup) {
+    randomFill(); // start Life
+    setup = false;
+  }
   stepTime();
   paintRasterGrid(tempGrid, LIFE_TRAILS);
   tempToGrid();
