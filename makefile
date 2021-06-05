@@ -10,7 +10,7 @@
 #
 #******************************************************************************
 
-# Uncomment this to for a silent build (except warnings and errors)
+# Uncomment this for an almost silent build
 QUIET            := \#
 
 # Keep the settings in `.vscode/c_cpp_properties.json` synced with these
@@ -21,6 +21,7 @@ BOARD_ID         := TEENSY41
 MCU              := imxrt1062
 
 ARDUINO_BASE     := /opt/arduino-1.8.15
+# ARDUINO_BASE     := /opt/arduino-1.8.13
 
 LIBS_SHARED_BASE := ${HOME}/Arduino/libraries
 LIBS_SHARED      := SmartMatrix FastLED
@@ -33,6 +34,7 @@ LIBS_CORE        := SPI Time
 
 CORE_BASE        := $(ARDUINO_BASE)/hardware/teensy/avr/cores/teensy4
 GCC_BASE         := $(ARDUINO_BASE)/hardware/tools/arm/bin
+# GCC_BASE         := $(ARDUINO_BASE)/hardware/tools/armgcc10/gcc/bin
 UPL_PJRC_B       := $(ARDUINO_BASE)/hardware/tools
 
 #******************************************************************************
@@ -51,6 +53,7 @@ FLAGS_LD    := -Wl,--print-memory-usage,--gc-sections,--relax,--defsym=__rtc_loc
 LIBS        := -larm_cortexM7lfsp_math -lm -lstdc++
 
 DEFINES     := -D__IMXRT1062__ -DTEENSYDUINO=154 -DARDUINO_TEENSY41 -DARDUINO=10815
+# DEFINES     := -D__IMXRT1062__ -DTEENSYDUINO=153 -DARDUINO_TEENSY41 -DARDUINO=10813
 DEFINES     += -DF_CPU=600000000 -DUSB_SERIAL -DLAYOUT_US_ENGLISH
 
 CPP_FLAGS   := $(FLAGS_CPU) $(FLAGS_OPT) $(FLAGS_COM) $(DEFINES) $(FLAGS_CPP)
@@ -167,7 +170,7 @@ INCLUDE         += $(foreach d, $(LIB_DIRS_LOCAL), -I$d)
 INCLUDE         += $(foreach d, $(LIB_DIRS_CORE), -I$d)
 
 # Generate directories --------------------------------------------------------
-DIRECTORIES     :=  $(sort $(dir $(CORE_OBJ) $(USR_OBJ) $(LIB_OBJ)))
+DIRECTORIES     := $(sort $(dir $(CORE_OBJ) $(USR_OBJ) $(LIB_OBJ)))
 generateDirs    := $(foreach d, $(DIRECTORIES), $(shell if [ ! -e "$d" ]; then mkdir -p "$d"; fi))
 
 # $(info dirs: $(DIRECTORIES))
@@ -180,15 +183,15 @@ generateDirs    := $(foreach d, $(DIRECTORIES), $(shell if [ ! -e "$d" ]; then m
 
 .PHONY: directories all rebuild upload uploadTy uploadCLI clean cleanUser cleanCore cleanLib
 
-all:  $(TARGET_LST) $(TARGET_SYM) $(TARGET_HEX)
+all: $(CORE_LIB) $(TARGET_LST) $(TARGET_SYM) $(TARGET_HEX)
 
 rebuild: cleanUser all
 
 clean: cleanUser cleanCore cleanLib
-	@$(QUIET)echo $(COL_OK)cleaning done$(COL_RESET)
+	@$(QUIET)echo "$(COL_OK)cleaning done$(COL_RESET)"
 
 upload: all
-	@$(QUIET)echo $(COL_OK)Uploading to Teensy
+	@$(QUIET)echo "$(COL_OK)Uploading to Teensy"
 	@echo -n $(COL_ERR)
 	@$(UPL_PJRC) || :
 	@echo -n $(COL_RESET)
@@ -204,154 +207,154 @@ uploadJLink: all
 
 # Core library ----------------------------------------------------------------
 $(CORE_BIN)/%.o: $(CORE_SRC)/%.S
-	@$(QUIET)echo $(COL_CORE)CORE [ASM] $(notdir $<)
+	@$(QUIET)echo "$(COL_CORE)CORE [ASM] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(S_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(CORE_BIN)/%.o: $(CORE_SRC)/%.c
-	@$(QUIET)echo $(COL_CORE)CORE [CC]  $(notdir $<)
+	@$(QUIET)echo "$(COL_CORE)CORE [CC]  $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(C_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(CORE_BIN)/%.o: $(CORE_SRC)/%.cpp
-	@$(QUIET)echo $(COL_CORE)CORE [CPP] $(notdir $<)
+	@$(QUIET)echo "$(COL_CORE)CORE [CPP] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(CORE_LIB) : $(CORE_OBJ)
-	@$(QUIET)echo $(COL_LINK)CORE [AR] $@
+	@$(QUIET)echo "$(COL_LINK)CORE [AR]  $@"
 	@echo -n $(COL_ERR)
 	@$(AR) $(AR_FLAGS) $@ $^
-	@$(QUIET)echo $(COL_OK)Teensy core built successfully
+	@$(QUIET)echo "$(COL_OK)Teensy core built successfully"
 	@echo -n $(COL_RESET)
 
 # Shared Libraries ------------------------------------------------------------
 $(LIB_BIN)/%.o: $(LIBS_SHARED_BASE)/%.S
-	@$(QUIET)echo $(COL_LIB)SHARED_LIB [ASM] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)SHARED_LIB [ASM] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(S_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_SHARED_BASE)/%.cpp
-	@$(QUIET)echo $(COL_LIB)SHARED_LIB [CPP] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)SHARED_LIB [CPP] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_SHARED_BASE)/%.c
-	@$(QUIET)echo $(COL_LIB)SHARED_LIB [CC]  $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)SHARED_LIB [CC]  $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(C_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 # Local Libraries -------------------------------------------------------------
 $(LIB_BIN)/%.o: $(LIBS_LOCAL_BASE)/%.S
-	@$(QUIET)echo $(COL_LIB)LOCAL_LIB [ASM] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)LOCAL_LIB [ASM] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(S_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_LOCAL_BASE)/%.cpp
-	@$(QUIET)echo $(COL_LIB)LOCAL_LIB [CPP] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)LOCAL_LIB [CPP] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_LOCAL_BASE)/%.c
-	@$(QUIET)echo $(COL_LIB)LOCAL_LIB [CC]  $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)LOCAL_LIB [CC]  $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(C_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 # Core Libraries -------------------------------------------------------------
 $(LIB_BIN)/%.o: $(LIBS_CORE_BASE)/%.S
-	@$(QUIET)echo $(COL_LIB)CORE_LIB [ASM] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)CORE_LIB [ASM] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(S_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_CORE_BASE)/%.cpp
-	@$(QUIET)echo $(COL_LIB)CORE_LIB [CPP] $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)CORE_LIB [CPP] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 $(LIB_BIN)/%.o: $(LIBS_CORE_BASE)/%.c
-	@$(QUIET)echo $(COL_LIB)CORE_LIB [CC]  $(notdir $<)
+	@$(QUIET)echo "$(COL_LIB)CORE_LIB [CC]  $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(C_FLAGS) $(INCLUDE) -o $@ -c $<
 	@echo -n $(COL_RESET)
 
 # Handle user sources ---------------------------------------------------------
 $(USR_BIN)/%.o: $(USR_SRC)/%.S
-	@$(QUIET)echo $(COL_SRC)USER [ASM] $<
+	@$(QUIET)echo "$(COL_SRC)USER [ASM] $<"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(S_FLAGS) $(INCLUDE) -o "$@" -c $<
 	@echo -n $(COL_RESET)
 
 $(USR_BIN)/%.o: $(USR_SRC)/%.c
-	@$(QUIET)echo $(COL_SRC)USER [CC]  $(notdir $<)
+	@$(QUIET)echo "$(COL_SRC)USER [CC]  $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CC)" $(C_FLAGS) $(INCLUDE) -o "$@" -c $<
 	@echo -n $(COL_RESET)
 
 $(USR_BIN)/%.o: $(USR_SRC)/%.cpp
-	@$(QUIET)echo $(COL_SRC)USER [CPP] $(notdir $<)
+	@$(QUIET)echo "$(COL_SRC)USER [CPP] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o "$@" -c $<
 	@echo -n $(COL_RESET)
 
 $(USR_BIN)/%.o: $(USR_SRC)/%.ino
-	@$(QUIET)echo $(COL_SRC)USER [INO] $(notdir $<)
+	@$(QUIET)echo "$(COL_SRC)USER [INO] $(notdir $<)"
 	@echo -n $(COL_ERR)
 	@"$(CXX)" $(CPP_FLAGS) $(INCLUDE) -o "$@" -x c++ -c $<
 	@echo -n $(COL_RESET)
 
 # Linking ---------------------------------------------------------------------
 $(TARGET_ELF): $(CORE_LIB) $(LIB_OBJ) $(USR_OBJ)
-	@$(QUIET)echo $(COL_LINK)[LD]  $@
+	@$(QUIET)echo "$(COL_LINK)[LD]  $@"
 	@echo -n $(COL_RESET)
 	@$(CC) $(LD_FLAGS) -o "$@" $(USR_OBJ) $(LIB_OBJ) $(CORE_LIB) $(LIBS)
-	@$(QUIET)echo $(COL_OK)User code built and linked to libraries
+	@$(QUIET)echo "$(COL_OK)User code built and linked to libraries"
 	@echo -n $(COL_RESET)
 
 %.lst: %.elf
-	@$(QUIET)echo $(COL_LINK)[LST] $@
+	@$(QUIET)echo "$(COL_LINK)[LST] $@"
 	@$(OBJDUMP) -d -S --demangle --no-show-raw-insn "$<" > "$@"
-	@$(QUIET)echo $(COL_OK)Sucessfully built project
+	@$(QUIET)echo "$(COL_OK)Successfully built project"
 	@echo -n $(COL_RESET)
 
 %.sym: %.elf
-	@$(QUIET)echo $(COL_LINK)[SYM] $@
+	@$(QUIET)echo "$(COL_LINK)[SYM] $@"
 	@$(NM) $(NM_FLAGS) "$<" > "$@"
 	@echo -n $(COL_RESET)
 
 %.hex: %.elf
-	@$(QUIET)echo $(COL_LINK)[HEX] $@
+	@$(QUIET)echo "$(COL_LINK)[HEX] $@"
 	@$(OBJCOPY) -O ihex -R.eeprom "$<" "$@"
 	@echo -n $(COL_RESET)
 
 # Cleaning --------------------------------------------------------------------
 cleanUser:
-	@$(QUIET)echo $(COL_LINK)Cleaning user binaries...
+	@$(QUIET)echo "$(COL_LINK)Cleaning user binaries..."
 	@echo -n $(COL_ERR)
 	@rm -rf "$(USR_BIN)" || :
-	@rm -rf "$(TARGET_ELF)" || :
-	@rm -rf "$(TARGET_HEX)" || :
-	@rm -rf "$(TARGET_LST)" || :
-	@rm -rf "$(TARGET_SYM)" || :
+	@rm -f "$(TARGET_ELF)" || :
+	@rm -f "$(TARGET_HEX)" || :
+	@rm -f "$(TARGET_LST)" || :
+	@rm -f "$(TARGET_SYM)" || :
 	@echo -n $(COL_RESET)
 
 cleanCore:
-	@$(QUIET)echo $(COL_LINK)Cleaning core binaries...$(COL_RESET)
+	@$(QUIET)echo "$(COL_LINK)Cleaning core binaries...$(COL_RESET)"
 	@if [ -e "$(CORE_BIN)" ]; then rm -rf "$(CORE_BIN)"; fi
 	@if [ -e "$(CORE_LIB)" ]; then rm -rf "$(CORE_LIB)"; fi
 
 cleanLib:
-	@$(QUIET)echo $(COL_LINK)Cleaning user library binaries...$(COL_RESET)
+	@$(QUIET)echo "$(COL_LINK)Cleaning user library binaries...$(COL_RESET)"
 	@if [ -e "$(LIB_BIN)" ]; then rm -rf "$(LIB_BIN)"; fi
 
 # compiler generated dependency info ------------------------------------------

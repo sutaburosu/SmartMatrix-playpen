@@ -1,4 +1,5 @@
 #pragma once
+#include <FastLED.h>
 
 void crossfade(CRGB *a, const CRGB *b, uint8_t amount);
 void crossfade8(byte *a, uint8_t amount);
