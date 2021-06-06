@@ -20,12 +20,29 @@ extern char* __brkval;
 uint32_t freeram_lowest = -1;
 uint32_t freeram() {
   uint32_t freenow = (char*)&_heap_end - __brkval;
-  if (freenow < freeram_lowest) freeram_lowest = freenow;
+  if (freenow < freeram_lowest) {
+    freeram_lowest = freenow;
+    Serial.printf("free:%d\r\n", freenow);
+  }
   return freenow;
+}
+
+// Teensy3 and 4 clock
+time_t getTeensy3Time() {
+  return Teensy3Clock.get();
+}
+
+void clockSetup() {
+  static bool setup = true;
+  if (setup) {
+    setSyncProvider(getTeensy3Time);
+    setup = false;
+  }
 }
 
 void setup() {
   Serial.begin(115200);
+  clockSetup();
   matrix.addLayer(backgroundLayer);
   matrix.begin();
   // matrix.setRefreshRate(300);
@@ -48,8 +65,8 @@ void newEffect(uint16_t n, Effect** e) {
     case 7: *e = new (AnalogueClock); break;
     case 8: *e = new (MandelZoom); break;
   }
-  // Effect* c = *e;
-  // Serial.println(c->name);
+  Effect* c = *e;
+  Serial.printf("%-20s", c->name);
 }
 
 void playEffect(uint16_t new_effect_nr) {
@@ -91,10 +108,10 @@ void check_delays() {
 
 void loop() {
   check_delays();
-  static uint16_t effect = 0;
+  static uint16_t effect = 1;
   static uint32_t last_change_ms;
   // if ((last_change_ms++ % 1024) == 0) last_effect = -effect;
-  if (millis() - last_change_ms > 1000) {
+  if (millis() - last_change_ms > 3000) {
     effect         = (effect + 1) % MAX_EFFECTS;
     last_change_ms = millis();
   }

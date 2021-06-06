@@ -1,6 +1,4 @@
 #include "../config.h"
-#include "analogueClock.h"
-
 
 uint32_t XY(uint16_t x, uint16_t y) {
   if (x >= kMatrixWidth) return 0;
@@ -9,28 +7,26 @@ uint32_t XY(uint16_t x, uint16_t y) {
 }
 
 // make sure these function signatures match your own XY()
-using XY_Func = uint32_t (*) (uint16_t, uint16_t);
+using XY_Func = uint32_t (*)(uint16_t, uint16_t);
 XY_Func YX(uint16_t y, uint16_t x) {
-  return (XY_Func) XY(x, y);
+  return (XY_Func)XY(x, y);
 }
-
 
 // blend between two colours by amount/255ths
 // updates the first colour in-place
-void rgbcrossfade(CRGB *a, const CRGB *b, uint8_t amount) {
+void rgbcrossfade(CRGB* a, const CRGB* b, uint8_t amount) {
   uint8_t rev = 255 - amount;
-  a->red   = (a->red   * amount + b->red   * rev) >> 8;
-  a->green = (a->green * amount + b->green * rev) >> 8;
-  a->blue  = (a->blue  * amount + b->blue  * rev) >> 8;
+  a->red      = (a->red * amount + b->red * rev) >> 8;
+  a->green    = (a->green * amount + b->green * rev) >> 8;
+  a->blue     = (a->blue * amount + b->blue * rev) >> 8;
 }
 
-void rgbcrossfade8(byte *a, uint8_t amount) {
+void rgbcrossfade8(byte* a, uint8_t amount) {
   uint8_t rev = 255 - amount;
-  *a = (*a * amount + 255 * rev) >> 8;
+  *a          = (*a * amount + 255 * rev) >> 8;
 }
 
-
-void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
+void wuLineAA8(uint8_t* fb, saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
   saccum78 grad, xd;
   saccum78 xend, yend, yf;
   int8_t ix1, ix2;
@@ -42,23 +38,30 @@ void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
   if ((x1 >> 8) >= kMatrixWidth && (x2 >> 8) >= kMatrixWidth) return;
   if ((y1 >> 8) >= kMatrixHeight && (y2 >> 8) >= kMatrixHeight) return;
 
-
-  XY_Func xyfunc = (XY_Func) XY;  // use regular XY() mapper when X is the major axis
+  XY_Func xyfunc = (XY_Func)XY; // use regular XY() mapper when X is the major axis
   if (abs(x2 - x1) < abs(y2 - y1)) {
     // Y is major axis: swap X and Y and switch to the YX() mapper
-    xyfunc = (XY_Func) YX;
+    xyfunc = (XY_Func)YX;
     saccum78 tmp;
-    tmp = x1; x1 = y1; y1 = tmp;
-    tmp = x2; x2 = y2; y2 = tmp;
+    tmp = x1;
+    x1  = y1;
+    y1  = tmp;
+    tmp = x2;
+    x2  = y2;
+    y2  = tmp;
   }
 
   if (x2 < x1) {
     // line is backwards: reverse it
     saccum78 tmp;
-    tmp = x1; x1 = x2; x2 = tmp;
-    tmp = y1; y1 = y2; y2 = tmp;
+    tmp = x1;
+    x1  = x2;
+    x2  = tmp;
+    tmp = y1;
+    y1  = y2;
+    y2  = tmp;
   }
-  
+
   xd = x2 - x1;
   // Treat very short lines as unit length
   if (xd < 25) {
@@ -82,7 +85,7 @@ void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
       y1 = ym - (grad / 2);
       y2 = ym + (grad / 2);
 
-      xd = 256;
+      xd   = 256;
       grad = 0;
     }
   }
@@ -96,9 +99,9 @@ void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
 
   // calc pixel intensities
   coverage = ((yend & 0xff) * xgap) >> 8;
-  ix1 = xend >> 8;
-  rgbcrossfade8(&heat1d[xyfunc(ix1, (yend >> 8))], coverage);
-  rgbcrossfade8(&heat1d[xyfunc(ix1, (yend >> 8) + 1)], 255 - coverage);
+  ix1      = xend >> 8;
+  rgbcrossfade8(&fb[xyfunc(ix1, (yend >> 8))], coverage);
+  rgbcrossfade8(&fb[xyfunc(ix1, (yend >> 8) + 1)], 255 - coverage);
 
   ix1++;
   yf = yend + grad;
@@ -115,22 +118,21 @@ void wuLineAA8(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2) {
 
   ix2 = xend >> 8;
   // *col = 0x0000ff;
-  rgbcrossfade8(&heat1d[xyfunc(ix2, (yend >> 8))], coverage);
+  rgbcrossfade8(&fb[xyfunc(ix2, (yend >> 8))], coverage);
   // *col = 0xff00ff;
-  rgbcrossfade8(&heat1d[xyfunc(ix2, (yend >> 8) + 1)],255 - coverage);
+  rgbcrossfade8(&fb[xyfunc(ix2, (yend >> 8) + 1)], 255 - coverage);
   // *col = 0xffffff;
 
   while (ix1 < ix2) {
     coverage = yf & 0xff;
-    rgbcrossfade8(&heat1d[xyfunc(ix1, yf >> 8)], coverage);
-    rgbcrossfade8(&heat1d[xyfunc(ix1, (yf >> 8) + 1)], 255 - coverage);
+    rgbcrossfade8(&fb[xyfunc(ix1, yf >> 8)], coverage);
+    rgbcrossfade8(&fb[xyfunc(ix1, (yf >> 8) + 1)], 255 - coverage);
     yf += grad;
     ix1++;
   }
 }
 
-
-void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col) {
+void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB* col) {
   saccum78 grad, xd;
   saccum78 xend, yend, yf;
   int8_t ix1, ix2;
@@ -142,23 +144,30 @@ void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col) {
   if ((x1 >> 8) >= kMatrixWidth && (x2 >> 8) >= kMatrixWidth) return;
   if ((y1 >> 8) >= kMatrixHeight && (y2 >> 8) >= kMatrixHeight) return;
 
-
-  XY_Func xyfunc = (XY_Func) XY;  // use regular XY() mapper when X is the major axis
+  XY_Func xyfunc = (XY_Func)XY; // use regular XY() mapper when X is the major axis
   if (abs(x2 - x1) < abs(y2 - y1)) {
     // Y is major axis: swap X and Y and switch to the YX() mapper
-    xyfunc = (XY_Func) YX;
+    xyfunc = (XY_Func)YX;
     saccum78 tmp;
-    tmp = x1; x1 = y1; y1 = tmp;
-    tmp = x2; x2 = y2; y2 = tmp;
+    tmp = x1;
+    x1  = y1;
+    y1  = tmp;
+    tmp = x2;
+    x2  = y2;
+    y2  = tmp;
   }
 
   if (x2 < x1) {
     // line is backwards: reverse it
     saccum78 tmp;
-    tmp = x1; x1 = x2; x2 = tmp;
-    tmp = y1; y1 = y2; y2 = tmp;
+    tmp = x1;
+    x1  = x2;
+    x2  = tmp;
+    tmp = y1;
+    y1  = y2;
+    y2  = tmp;
   }
-  
+
   xd = x2 - x1;
   // Treat very short lines as unit length
   if (xd < 25) {
@@ -182,7 +191,7 @@ void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col) {
       y1 = ym - (grad / 2);
       y2 = ym + (grad / 2);
 
-      xd = 256;
+      xd   = 256;
       grad = 0;
     }
   }
@@ -196,7 +205,7 @@ void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col) {
 
   // calc pixel intensities
   coverage = ((yend & 0xff) * xgap) >> 8;
-  ix1 = xend >> 8;
+  ix1      = xend >> 8;
   // *col = 0xff0000;
   rgbcrossfade(&crgbleds[xyfunc(ix1, (yend >> 8))], col, coverage);
   // *col = 0x00ff00;
@@ -231,17 +240,16 @@ void wuLineAA(saccum78 x1, saccum78 y1, saccum78 x2, saccum78 y2, CRGB * col) {
   }
 }
 
-
-void wuVectorAA(const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta, CRGB *col) {
+void wuVectorAA(const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta, CRGB* col) {
   int16_t dx, dy;
   dx = ((int32_t)cos16(theta) * length) / 32768;
   dy = ((int32_t)sin16(theta) * length) / 32768;
   wuLineAA(x, y, x + dx, y + dy, col);
 }
 
-void wuVectorAA8(const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta) {
+void wuVectorAA8(uint8_t* fb, const uint16_t x, const uint16_t y, const uint16_t length, const uint16_t theta) {
   int16_t dx, dy;
   dx = ((int32_t)cos16(theta) * length) / 32768;
   dy = ((int32_t)sin16(theta) * length) / 32768;
-  wuLineAA8(x, y, x + dx, y + dy);
+  wuLineAA8(fb, x, y, x + dx, y + dy);
 }
