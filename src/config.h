@@ -18,6 +18,8 @@ const uint8_t kRefreshDepth = 36;         // Tradeoff of color quality vs refres
 const uint8_t kDmaBufferRows = 4;         // known working: 2-4, use 2 to save RAM, more to keep from dropping frames and automatically lowering refresh rate.  (This isn't used on ESP32, leave as default)
 const uint8_t kPanelType = SM_PANELTYPE_HUB75_64ROW_MOD32SCAN;  // Choose the configuration that matches your panels.  See more details in MatrixCommonHub75.h and the docs: https://github.com/pixelmatix/SmartMatrix/wiki
 
-extern SMLayerBackground<rgb24, 0> backgroundLayer;
+extern SMLayerBackground<rgb24, 0> *backgroundLayer;
 extern CRGB *crgbleds;
 extern rgb24 *rgb24leds;
+
+#include "Effect.h"

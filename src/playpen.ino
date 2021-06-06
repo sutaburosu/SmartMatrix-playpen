@@ -7,85 +7,116 @@
 #include "sutaburosu/analogueClock.h"
 #include "sutaburosu/rotzoom.h"
 
-
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(realBackgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, 0);
-SMLayerBackground<RGB_TYPE(COLOR_DEPTH), 0> backgroundLayer = realBackgroundLayer;
+SMLayerBackground<RGB_TYPE(COLOR_DEPTH), 0>* backgroundLayer = &realBackgroundLayer;
 
-CRGB *crgbleds;
-rgb24 *rgb24leds;
+CRGB* crgbleds;
+rgb24* rgb24leds;
 
+extern unsigned long _heap_start;
+extern unsigned long _heap_end;
+extern char* __brkval;
+uint32_t freeram_lowest = -1;
+uint32_t freeram() {
+  uint32_t freenow = (char*)&_heap_end - __brkval;
+  if (freenow < freeram_lowest) freeram_lowest = freenow;
+  return freenow;
+}
 
 void setup() {
   Serial.begin(115200);
-  matrix.addLayer(&backgroundLayer);
+  matrix.addLayer(backgroundLayer);
   matrix.begin();
   // matrix.setRefreshRate(300);
-  backgroundLayer.setBrightness(128);
+  backgroundLayer->setBrightness(128);
+  delay(900);
+  Serial.println("boot");
 }
 
+#define MAX_EFFECTS 9
+void newEffect(uint16_t n, Effect** e) {
+  switch (n) {
+    default:
+    case 0: *e = new (Life); break;
+    case 1: *e = new (RotZoomer); break;
+    case 2: *e = new (ExoticornTunnel1); break;
+    case 3: *e = new (ExoticornTunnel2); break;
+    case 4: *e = new (ExoticornTunnel3); break;
+    case 5: *e = new (FMS_Cat_quadtree); break;
+    case 6: *e = new (StereoTartan); break;
+    case 7: *e = new (AnalogueClock); break;
+    case 8: *e = new (MandelZoom); break;
+  }
+  // Effect* c = *e;
+  // Serial.println(c->name);
+}
+
+void playEffect(uint16_t new_effect_nr) {
+  static Effect* active_effect;
+  static uint16_t effect_nr = -1;
+  if (new_effect_nr != effect_nr) {
+    if (active_effect) {
+      delete (active_effect);
+      active_effect = 0;
+    }
+    effect_nr = new_effect_nr;
+    newEffect(effect_nr, &active_effect);
+  }
+  if (active_effect)
+    active_effect->drawFrame();
+}
+
+void check_delays() {
+  // check for unexpected delays. On TD1.53 this sketch triggers at 31.5 minutes,
+  // and every 71.6 minutes after that. On TD1.54b9 it has never triggered.
+  // https://forum.pjrc.com/threads/66525-Teensy-4-1-Freeze-(-1786ms)
+  static uint32_t delay_last_ms = 0;
+  static uint32_t delay_count   = 0;
+  static uint64_t delay_frames  = 0;
+  uint32_t delay_this_ms        = millis();
+  if ((delay_this_ms - delay_last_ms > 100) && (delay_frames > 0)) {
+    delay_count++;
+    Serial.println();
+    Serial.print("!!!! DELAY !!!!  @");
+    Serial.print(delay_this_ms);
+    Serial.print(" ms   Delay: ");
+    Serial.print(delay_this_ms - delay_last_ms);
+    Serial.print(" ms  count: ");
+    Serial.println(delay_count);
+  }
+  delay_last_ms = delay_this_ms;
+  delay_frames++;
+}
 
 void loop() {
-  static uint32_t effect = 0;
-
+  check_delays();
+  static uint16_t effect = 0;
   static uint32_t last_change_ms;
   // if ((last_change_ms++ % 1024) == 0) last_effect = -effect;
-  if (millis() - last_change_ms > 10000) {
-    effect = (effect + 1) % 9;
+  if (millis() - last_change_ms > 1000) {
+    effect         = (effect + 1) % MAX_EFFECTS;
     last_change_ms = millis();
   }
 
-  const uint32_t us_points = 3;
+  const uint8_t us_points = 3;
   static uint64_t us_timing[us_points];
-  static uint64_t us_total[us_points];
-  static uint32_t us_frame = 0;
-  static uint64_t fpslast_us = us_timing[0];
-  static uint32_t last_effect = effect;
-
   us_timing[0] = micros();
-  backgroundLayer.swapBuffers(true);
-  rgb24leds = backgroundLayer.backBuffer();
-  crgbleds = (CRGB *) rgb24leds;
-
+  backgroundLayer->swapBuffers(true);
+  rgb24leds    = backgroundLayer->backBuffer();
+  crgbleds     = (CRGB*)rgb24leds;
   us_timing[1] = micros();
-  switch (effect) {
-    case 0: life(); break;
-    case 1: rotzoom(); break;
-    case 2: exoticorn_tunnel1(); break;
-    case 3: exoticorn_tunnel2(); break;
-    case 4: exoticorn_tunnel3(); break;
-    case 5: FMS_Cat_quadtree(); break;
-    case 6: stereo_tartan(); break;
-    case 7: analogueClock(); break;
-    case 8: mandelzoom(); break;
-    default: break;
-  }
-  us_timing[2] = micros();
 
-  {
-    // check for unexpected delays. On TD1.53 this sketch triggers at 31.5 minutes,
-    // and every 71.6 minutes after that. On TD1.54b9 it has never triggered.
-    // https://forum.pjrc.com/threads/66525-Teensy-4-1-Freeze-(-1786ms) 
-    static uint32_t last_ms = 0;
-    static uint32_t delays = 0;
-    static uint64_t total_frames = 0;
-    uint32_t this_ms = millis();
-    if ((this_ms - last_ms > 100) && (total_frames > 0)) {
-      delays++;
-      Serial.println();
-      Serial.print("!!!! DELAY !!!!  @");
-      Serial.print(this_ms);
-      Serial.print(" ms   Delay: ");
-      Serial.print(this_ms - last_ms);
-      Serial.print(" ms  count: ");
-      Serial.println(delays);
-    }
-    last_ms = this_ms;
-    total_frames++;
-  }
+  playEffect(effect);
+  freeram();
+  us_timing[2] = micros();
 
   // return;
   // print frames per second
+  static uint64_t us_total[us_points];
+  static uint32_t us_frame    = 0;
+  static uint64_t fpslast_us  = us_timing[0];
+  static uint32_t last_effect = effect;
   ++us_frame;
   for (uint8_t us_loop = 1; us_loop < us_points; us_loop++) {
     us_total[us_loop] += us_timing[us_loop] - us_timing[us_loop - 1];
@@ -96,9 +127,11 @@ void loop() {
       Serial.printf("%6.2fms  ", us_total[us_loop] / 1000.0 / us_frame);
       us_total[us_loop] = 0;
     }
-    Serial.printf("%6.2f FPS @%dHz\r\n", us_frame * 1000000.0 / (micros() - fpslast_us), matrix.getRefreshRate());
-    fpslast_us = micros();
-    us_frame = 0;
+    Serial.printf("%6.2f FPS @%dHz freeram:%d (min %d)\r\n",
+                  us_frame * 1000000.0 / (micros() - fpslast_us),
+                  matrix.getRefreshRate(), freeram(), freeram_lowest);
+    fpslast_us  = micros();
+    us_frame    = 0;
     last_effect = effect;
   }
 }
