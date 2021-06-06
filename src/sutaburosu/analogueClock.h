@@ -1,3 +1,5 @@
+/* sutaburosu 2021-01-14 */
+
 #pragma once
 #include "../config.h"
 #include "wuLineAA.h"

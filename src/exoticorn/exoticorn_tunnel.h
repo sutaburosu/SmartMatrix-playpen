@@ -1,6 +1,12 @@
-/* https://tic80.com/play?cart=1871 
- & https://tic80.com/play?cart=1872
- & https://tic80.com/play?cart=1873
+/* exoticorn - 2021-05-15
+
+  The 3 original Lua/TIC-80 effects were live-coded in
+  25 minutes each by exoticorn during a 256-byte battle
+  at outlinedemoparty.nl
+
+   https://tic80.com/play?cart=1871 
+   https://tic80.com/play?cart=1872
+   https://tic80.com/play?cart=1873
 */
 
 #pragma once

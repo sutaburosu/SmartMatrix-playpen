@@ -1,3 +1,7 @@
+/* jimLee - 2021
+  https://forum.arduino.cc/t/the-fastest-way-to-move-a-block-of-ram/865841
+*/
+
 #pragma once
 #include "../config.h"
 

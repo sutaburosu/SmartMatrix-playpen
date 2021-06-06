@@ -1,3 +1,12 @@
+/* someone - circa 1995-2000
+
+  I found this code on an old Acorn Archimedes hard drive.
+  I think I may have done a floating- to fixed-point conversion
+  of someone else's code.
+
+  wuLine() still has bugs at the endpoints of the lines
+*/
+
 #include "../config.h"
 
 uint32_t XY(uint16_t x, uint16_t y) {

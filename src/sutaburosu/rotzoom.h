@@ -1,3 +1,6 @@
+/* sutaburosu - 2021-03-19
+*/
+
 #pragma once
 
 #include "../config.h"

@@ -1,3 +1,5 @@
+/* atuline a.k.a. Johnny5Canuck - 2021 */
+
 #pragma once
 #include "../config.h"
 

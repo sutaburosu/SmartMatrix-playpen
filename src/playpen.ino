@@ -6,6 +6,7 @@
 #include "jimLee/life.h"
 #include "sutaburosu/analogueClock.h"
 #include "sutaburosu/EffectWavyDots.h"
+#include "sutaburosu/EffectMetaBalls.h"
 #include "sutaburosu/rotzoom.h"
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
@@ -66,6 +67,7 @@ void newEffect(uint16_t n, Effect** e) {
     case 7: *e = new (AnalogueClock); break;
     case 8: *e = new (MandelZoom); break;
     case 9: *e = new (WavyDots); break;
+    case 10: *e = new (MetaBalls); break;
   }
   Effect* c = *e;
   Serial.printf("%-20s", c->name);
@@ -110,7 +112,7 @@ void check_delays() {
 
 void loop() {
   check_delays();
-  static uint16_t effect = 9;
+  static uint16_t effect = 10;
   static uint32_t last_change_ms;
   if (millis() - last_change_ms > 30000) {
     effect         = (effect + 1) % MAX_EFFECTS;
