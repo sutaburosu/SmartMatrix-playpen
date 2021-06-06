@@ -4,12 +4,12 @@
 #pragma once
 #include "../config.h"
 
-class FMS_Cat_quadtree : public Effect {
+class QuadTree : public Effect {
   public:
-  FMS_Cat_quadtree() {
-    name = (char*)"FMS_Cat_quadtree";
+  QuadTree() {
+    name = (char*)"QuadTree";
   };
-  virtual ~FMS_Cat_quadtree(){};
+  virtual ~QuadTree(){};
 
   private:
   uint32_t quadtree_rand = 0;

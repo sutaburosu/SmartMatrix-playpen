@@ -1,10 +1,12 @@
 #pragma once
 
-#include <Arduino.h>
+// silence the version numbers
 #define FASTLED_INTERNAL
-#include <FastLED.h>
 #define SM_INTERNAL
 //#define SMARTMATRIX_USE_PSRAM
+
+#include <Arduino.h>
+#include <FastLED.h>
 #include "MatrixHardware_Teensy4_ShieldV5_RBG.h"
 #include <SmartMatrix.h>
 #include "FastLED_additions.h"
