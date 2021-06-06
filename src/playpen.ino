@@ -1,13 +1,13 @@
 #include "config.h"
-#include "atuline/mandelzoom.h"
-#include "exoticorn/exoticorn_tunnel.h"
-#include "FMS_Cat/quadtree.h"
-#include "Incubus/stereo_tartan.h"
-#include "jimLee/life.h"
-#include "sutaburosu/analogueClock.h"
-#include "sutaburosu/EffectWavyDots.h"
-#include "sutaburosu/EffectMetaBalls.h"
-#include "sutaburosu/rotzoom.h"
+#include "Effects/MandelZoom.h"
+#include "Effects/ExoticornTunnels.h"
+#include "Effects/QuadTree.h"
+#include "Effects/StereoTartan.h"
+#include "Effects/Life.h"
+#include "Effects/AnalogueClock.h"
+#include "Effects/WavyDots.h"
+#include "Effects/MetaBalls.h"
+#include "Effects/RotZoomer.h"
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(realBackgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, 0);

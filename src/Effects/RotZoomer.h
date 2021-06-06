@@ -4,16 +4,16 @@
 #pragma once
 
 #include "../config.h"
-#include "images.h"
+#include "../Resources/Fish_18x18x24bpp.h"
 
 #define TILE_SIZE 32
 
-    class RotZoomer : public Effect {
+class RotZoomer : public Effect {
   public:
   RotZoomer(void) {
     name = (char*)"RotZoomer";
   }
-  virtual ~RotZoomer(void) {};
+  virtual ~RotZoomer(void){};
 
   private:
   const uint8_t wu_weight(uint8_t a, uint8_t b) {

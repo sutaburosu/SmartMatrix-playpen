@@ -5,7 +5,7 @@
 
 #pragma once
 #include "../config.h"
-#include "wuLineAA.h"
+#include "../wuLineAA.h"
 
 class WavyDots : public Effect {
   public:

@@ -2,7 +2,7 @@
 
 #pragma once
 #include "../config.h"
-#include "wuLineAA.h"
+#include "../wuLineAA.h"
 #include <TimeLib.h>
 
 class AnalogueClock : public Effect {

@@ -7,7 +7,7 @@
   wuLine() still has bugs at the endpoints of the lines
 */
 
-#include "../config.h"
+#include "config.h"
 
 uint32_t XY(uint16_t x, uint16_t y) {
   if (x >= kMatrixWidth) return 0;
