@@ -1,8 +1,6 @@
 #pragma once
 #include "../config.h"
 
-extern void mandelzoom();
-
 class MandelZoom : public Effect {
   public:
   MandelZoom() {

@@ -12,6 +12,44 @@ XY_Func YX(uint16_t y, uint16_t x) {
   return (XY_Func)XY(x, y);
 }
 
+// x and y are 24.8 fixed point
+// Not Ray Wu. ;)  The idea came from Xiaolin Wu.
+void wu_pixel(uint32_t x, uint32_t y, CRGB* col) {
+  // extract the fractional parts and derive their inverses
+  uint8_t xx = x & 0xff, yy = y & 0xff, ix = 255 - xx, iy = 255 - yy;
+// calculate the intensities for each affected pixel
+#define WU_WEIGHT(a, b) ((uint8_t)(((a) * (b) + (a) + (b)) >> 8))
+  uint8_t wu[4] = {WU_WEIGHT(ix, iy), WU_WEIGHT(xx, iy),
+                   WU_WEIGHT(ix, yy), WU_WEIGHT(xx, yy)};
+#undef WU_WEIGHT
+  // multiply the intensities by the colour, and saturating-add them to the pixels
+  for (uint8_t i = 0; i < 4; i++) {
+    uint16_t local_x = (x >> 8) + (i & 1);
+    uint16_t local_y = (y >> 8) + ((i >> 1) & 1);
+    if (local_x >= kMatrixWidth || local_y >= kMatrixHeight)
+      continue;
+    uint16_t xy      = XY(local_x, local_y);
+    crgbleds[xy].r   = qadd8(crgbleds[xy].r, col->r * wu[i] >> 8);
+    crgbleds[xy].g   = qadd8(crgbleds[xy].g, col->g * wu[i] >> 8);
+    crgbleds[xy].b   = qadd8(crgbleds[xy].b, col->b * wu[i] >> 8);
+  }
+}
+
+// note that this will write to NUM_LEDS + 1
+void wu_pixel1d(uint32_t y, CRGB* col) {
+  // extract the fractional parts and derive their inverses
+  uint8_t yy = y & 0xff, iy = 255 - yy;
+  y             = y >> 8;
+  uint8_t wu[2] = {iy, yy};
+  // multiply the intensities by the colour, and saturating-add them to the pixels
+  for (uint8_t i = 0; i < 2; i++) {
+    crgbleds[y].r = qadd8(crgbleds[y].r, col->r * wu[i] >> 8);
+    crgbleds[y].g = qadd8(crgbleds[y].g, col->g * wu[i] >> 8);
+    crgbleds[y].b = qadd8(crgbleds[y].b, col->b * wu[i] >> 8);
+    y++;
+  }
+}
+
 // blend between two colours by amount/255ths
 // updates the first colour in-place
 void rgbcrossfade(CRGB* a, const CRGB* b, uint8_t amount) {

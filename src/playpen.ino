@@ -5,6 +5,7 @@
 #include "Incubus/stereo_tartan.h"
 #include "jimLee/life.h"
 #include "sutaburosu/analogueClock.h"
+#include "sutaburosu/EffectWavyDots.h"
 #include "sutaburosu/rotzoom.h"
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, 0);
@@ -51,7 +52,7 @@ void setup() {
   Serial.println("boot");
 }
 
-#define MAX_EFFECTS 9
+#define MAX_EFFECTS 10
 void newEffect(uint16_t n, Effect** e) {
   switch (n) {
     default:
@@ -64,6 +65,7 @@ void newEffect(uint16_t n, Effect** e) {
     case 6: *e = new (StereoTartan); break;
     case 7: *e = new (AnalogueClock); break;
     case 8: *e = new (MandelZoom); break;
+    case 9: *e = new (WavyDots); break;
   }
   Effect* c = *e;
   Serial.printf("%-20s", c->name);
@@ -108,10 +110,9 @@ void check_delays() {
 
 void loop() {
   check_delays();
-  static uint16_t effect = 1;
+  static uint16_t effect = 9;
   static uint32_t last_change_ms;
-  // if ((last_change_ms++ % 1024) == 0) last_effect = -effect;
-  if (millis() - last_change_ms > 3000) {
+  if (millis() - last_change_ms > 30000) {
     effect         = (effect + 1) % MAX_EFFECTS;
     last_change_ms = millis();
   }
