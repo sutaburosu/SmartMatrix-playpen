@@ -23,7 +23,7 @@ enum EffectType : uint16_t {
   mandelZoom,
   wavyDots,
   metaBalls,
-  _random_effect  // keep this last
+  _random_effect // keep this last
 };
 
 Effect* newEffect(EffectType type) {
@@ -53,6 +53,6 @@ Effect* newEffect(EffectType type) {
 template <typename T>
 Effect* newEffect() {
   Effect* c = new T;
-  Serial.printf("%-20s", c->name);
+  // Serial.printf("%-20s", c->name);
   return c;
 }

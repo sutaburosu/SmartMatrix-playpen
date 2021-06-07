@@ -16,15 +16,15 @@ const uint16_t kHalfWidth  = kMatrixWidth / 2;
 const uint16_t kHalfHeight = kMatrixHeight / 2;
 
 class ExoticornTunnel1 : public Effect {
-  public:
-  ExoticornTunnel1(){
-    name = (char*)"exoticorn_tunnel1";
+public:
+  ExoticornTunnel1() {
+    name = (char*)F("ExoticornTunnel1");
   };
   virtual ~ExoticornTunnel1(){};
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
   virtual void drawFrame() {
-    rgb24* led = rgb24leds;
+    rgb24* led = (rgb24*)crgbleds;
     float o, q, w, r, z, s, t = millis() / 2000.f;
     o = sinf(t) * .8f;
     for (int16_t y = -kHalfHeight; y < kHalfHeight; y++) {
@@ -46,18 +46,18 @@ class ExoticornTunnel1 : public Effect {
 };
 
 class ExoticornTunnel2 : public Effect {
-  public:
-  ExoticornTunnel2(){
-    name = (char*)"exoticorn_tunnel2";
+public:
+  ExoticornTunnel2() {
+    name = (char*)F("ExoticornTunnel2");
   };
   virtual ~ExoticornTunnel2(){};
 
-  private:
+private:
   const float n(float x) {
     return (sin(x) + sin(x * .7f)) / 2.f;
   }
 
-  public:
+public:
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
   virtual void drawFrame() {
@@ -80,15 +80,15 @@ class ExoticornTunnel2 : public Effect {
 };
 
 class ExoticornTunnel3 : public Effect {
-  public:
-  ExoticornTunnel3(){
-    name = (char*)"exoticorn_tunnel3";
+public:
+  ExoticornTunnel3() {
+    name = (char*)F("ExoticornTunnel3");
   };
   virtual ~ExoticornTunnel3(){};
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
   virtual void drawFrame() {
-    rgb24* led = rgb24leds;
+    rgb24* led = (rgb24*)crgbleds;
     byte c;
     float t, z, q, w;
     uint8_t path_width   = 139;

@@ -5,8 +5,8 @@ SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth,
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(realBackgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, 0);
 SMLayerBackground<RGB_TYPE(COLOR_DEPTH), 0>* backgroundLayer = &realBackgroundLayer;
 
+static Effect* activeEffect;
 CRGB* crgbleds;
-rgb24* rgb24leds;
 
 extern unsigned long _heap_start;
 extern unsigned long _heap_end;
@@ -25,26 +25,15 @@ time_t getTeensy3Time() {
   return Teensy3Clock.get();
 }
 
-void clockSetup() {
-  static bool setup = true;
-  if (setup) {
-    setSyncProvider(getTeensy3Time);
-    setup = false;
-  }
-}
-
 void setup() {
   Serial.begin(115200);
-  clockSetup();
+  setSyncProvider(getTeensy3Time);
   matrix.addLayer(backgroundLayer);
   // matrix.setRefreshRate(300);
   backgroundLayer->setBrightness(128);
   matrix.begin();
-  // delay(900);
-  // Serial.println("boot");
 }
 
-static Effect* activeEffect;
 void playEffect(uint16_t new_effect_nr) {
   static uint16_t effect_nr = -1;
   if (new_effect_nr != effect_nr) {
@@ -61,13 +50,13 @@ void loop() {
   const uint8_t us_points  = 3;
   static uint64_t us_timing[us_points];
   static uint64_t us_total[us_points];
+  static uint64_t us_max[us_points];
   static uint32_t us_frames      = 0;
-  us_timing[0] = micros();
+  us_timing[0]                   = micros();
   static uint64_t us_last_report = us_timing[0];
 
   backgroundLayer->swapBuffers(true);
-  rgb24leds = backgroundLayer->backBuffer();
-  crgbleds  = (CRGB*)rgb24leds;
+  crgbleds = (CRGB*)backgroundLayer->backBuffer();
 
   us_timing[1] = micros();
   playEffect(effect);
@@ -77,17 +66,21 @@ void loop() {
   // sum the execution times for each frame
   ++us_frames;
   for (uint8_t us_loop = 1; us_loop < us_points; us_loop++) {
-    us_total[us_loop] += us_timing[us_loop] - us_timing[us_loop - 1];
+    uint64_t diff = us_timing[us_loop] - us_timing[us_loop - 1];
+    us_total[us_loop] += diff;
+    if (diff > us_max[us_loop])
+      us_max[us_loop] = diff;
   }
 
   EVERY_N_SECONDS(30) {
     // print timing report
     Serial.printf("%2u:%-20s ", effect, activeEffect->name);
     for (uint8_t us_loop = 1; us_loop < us_points; us_loop++) {
-      Serial.printf("%6.2fms  ", us_total[us_loop] / 1000.0 / us_frames);
-      us_total[us_loop] = 0;
+      Serial.printf("%6.2fms ^%-6.2f ", us_total[us_loop] / 1000.0 / us_frames,
+                    us_max[us_loop] / 1000.0);
+      us_total[us_loop] = us_max[us_loop] = 0;
     }
-    Serial.printf("%6.2f FPS @%dHz freeram:%d (min %d)\r\n",
+    Serial.printf("%6.2f FPS @%dHz freeram:%d (min %d)\n",
                   us_frames * 1000000.0 / (micros() - us_last_report),
                   matrix.getRefreshRate(), freeram(), freeram_lowest);
     us_last_report = micros();

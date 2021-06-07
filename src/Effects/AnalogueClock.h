@@ -6,12 +6,12 @@
 #include <TimeLib.h>
 
 class AnalogueClock : public Effect {
-  private:
+private:
   byte* heat;
 
-  public:
+public:
   AnalogueClock() {
-    name = (char*)"AnalogueClock";
+    name = (char*)F("AnalogueClock");
     heat = (byte*)malloc((kMatrixHeight + 1) * kMatrixWidth);
   };
   virtual ~AnalogueClock() {
@@ -20,14 +20,10 @@ class AnalogueClock : public Effect {
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
   virtual void drawFrame() {
-    analogueClock();
-  }
-
-  private:
-  void analogueClock() {
     ledclock(hour(), minute(), second());
   }
 
+private:
   void Fire2012(uint8_t activity) {
     for (uint8_t x = 0; x < kMatrixWidth; x++) {
       // Cool down every cell a little

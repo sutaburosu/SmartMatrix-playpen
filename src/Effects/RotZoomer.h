@@ -9,18 +9,18 @@
 #define TILE_SIZE 32
 
 class RotZoomer : public Effect {
-  public:
+public:
   RotZoomer(void) {
-    name = (char*)"RotZoomer";
+    name = (char*)F("RotZoomer");
   }
   virtual ~RotZoomer(void){};
 
-  private:
+private:
   const uint8_t wu_weight(uint8_t a, uint8_t b) {
     return ((uint16_t)a * b + a + b) >> 8;
   };
 
-  public:
+public:
   void drawFrame(void) {
     uint32_t ms = millis();
 

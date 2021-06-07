@@ -28,9 +28,9 @@ end
 #include "../config.h"
 
 class StereoTartan : public Effect {
-  public:
+public:
   StereoTartan() {
-    name = (char*)"Stereo Tartan";
+    name = (char*)F("StereoTartan");
   };
   virtual ~StereoTartan(){};
 #pragma GCC push_options

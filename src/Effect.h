@@ -1,10 +1,9 @@
 #pragma once
 
 class Effect {
-  public:
+public:
   char* name;
   Effect(void){};
   virtual ~Effect(void){};
-  virtual void drawFrame() {
-  };
+  virtual void drawFrame(){};
 };

@@ -4,14 +4,14 @@
 #include "../config.h"
 
 class MandelZoom : public Effect {
-  public:
+public:
   MandelZoom() {
-    name = (char*)"MandelZoom";
+    name           = (char*)F("MandelZoom");
     currentPalette = RainbowColors_p;
   };
   virtual ~MandelZoom(){};
 
-  private:
+private:
   CRGBPalette16 currentPalette;
   CRGBPalette16 targetPalette;
 
@@ -30,7 +30,7 @@ class MandelZoom : public Effect {
 
 #pragma GCC push_options
 #pragma GCC optimize "-Ofast"
-  public:
+public:
   virtual void drawFrame() {
 
     resize(); // Define the window to display.
@@ -51,7 +51,7 @@ class MandelZoom : public Effect {
     }
   }
 
-  private:
+private:
   void resize() { // Resize the minimum and maximum values on the fly to display.
 
     // Let's animate our Mandelbrot set.
@@ -81,7 +81,7 @@ class MandelZoom : public Effect {
   void mandel() { // Calculate and display the Mandelbrot set for the current window.
     static uint16_t hue_rot = 0;
     hue_rot += 128;
-    CRGB* leds = (CRGB*)rgb24leds;
+    CRGB* leds = crgbleds;
     // Start y
     float y = ymin;
     for (int j = 0; j < kMatrixHeight; j++) {

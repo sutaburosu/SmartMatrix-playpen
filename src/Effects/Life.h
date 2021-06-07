@@ -6,7 +6,7 @@
 #include "../config.h"
 
 class Life : public Effect {
-  private:
+private:
   bool trails          = true;
   uint32_t seed        = 322524;
   const byte BYTES_X   = kMatrixWidth / 8;
@@ -14,11 +14,11 @@ class Life : public Effect {
   byte* grid;
   byte* tempGrid;
 
-  public:
+public:
   Life() {
-    name     = (char*) "Life";
-    grid     = (byte*) malloc(bytes);
-    tempGrid = (byte*) malloc(bytes);
+    name     = (char*)F("Life");
+    grid     = (byte*)malloc(bytes);
+    tempGrid = (byte*)malloc(bytes);
     randomFill();
   }
 
@@ -33,7 +33,7 @@ class Life : public Effect {
     tempToGrid();
   }
 
-  private:
+private:
   void paintRasterGrid(byte* grid, bool show_trails) {
     for (uint16_t y = 0; y < kMatrixHeight; y++) {
       for (uint16_t x = 0; x < kMatrixWidth; x += 8) {

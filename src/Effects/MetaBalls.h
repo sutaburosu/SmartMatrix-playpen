@@ -7,23 +7,15 @@
 #pragma once
 #include "../config.h"
 
-DEFINE_GRADIENT_PALETTE(lava){
-    0, 255, 30, 0,
-    64, 0, 0, 0,
-    96, 120, 120, 0,
-    140, 180, 180, 0,
-    255, 255, 50, 0
-};
-
 class MetaBalls : public Effect {
-  private:
+private:
   uint8_t* buffer;
   uint8_t* divide;
   CRGBPalette16* palette;
 
-  public:
+public:
   MetaBalls() {
-    name    = (char*)"MetaBalls";
+    name    = (char*)F("MetaBalls");
     buffer  = (uint8_t*)malloc(kMatrixWidth * kMatrixHeight);
     divide  = (uint8_t*)malloc(256);
     palette = (CRGBPalette16*)malloc(3 * 16);
@@ -62,7 +54,7 @@ class MetaBalls : public Effect {
           sum += dist2(i, j, bx4, by4);
           sum += dist2(i, j, bx5, by5);
 
-          byte col       = constrain(sum, 0, 240);
+          byte col                       = constrain(sum, 0, 240);
           crgbleds[i + j * kMatrixWidth] = ColorFromPalette(*palette, col, 255);
         }
       }
@@ -73,7 +65,7 @@ class MetaBalls : public Effect {
       radial_fill(buffer, bx4 - kMatrixWidth / 1, by4 - kMatrixHeight / 1);
       radial_fill(buffer, bx5 - kMatrixWidth / 1, by5 - kMatrixHeight / 1);
       uint8_t* src = buffer;
-      CRGB* led = crgbleds;
+      CRGB* led    = crgbleds;
       for (uint8_t y = 0; y < kMatrixHeight; y++) {
         for (uint8_t x = 0; x < kMatrixWidth; x++) {
           *led++ = ColorFromPalette(*palette, *src, 255);

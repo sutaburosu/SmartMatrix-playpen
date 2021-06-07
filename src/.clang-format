@@ -4,7 +4,6 @@ BasedOnStyle: LLVM
 
 IndentWidth: 2
 TabWidth: 2
-AccessModifierOffset: -3
 ColumnLimit: 0
 UseTab: Never
 
@@ -26,6 +25,7 @@ IndentPPDirectives: AfterHash
 CompactNamespaces: true
 
 SortIncludes: false
+IncludeBlocks: Merge
 AllowShortBlocksOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
@@ -38,7 +38,7 @@ BraceWrapping:
   AfterStruct: false
   AfterClass: false
   AfterControlStatement: false
-  AfterNamespace: true
+  AfterNamespace: false
   AfterFunction: false
   AfterUnion: false
   AfterExternBlock: false
@@ -48,4 +48,3 @@ BraceWrapping:
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
 
-IncludeBlocks: Merge

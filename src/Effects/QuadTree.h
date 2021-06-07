@@ -5,13 +5,13 @@
 #include "../config.h"
 
 class QuadTree : public Effect {
-  public:
+public:
   QuadTree() {
-    name = (char*)"QuadTree";
+    name = (char*)("QuadTree");
   };
   virtual ~QuadTree(){};
 
-  private:
+private:
   uint32_t quadtree_rand = 0;
 
 #pragma GCC push_options
@@ -33,7 +33,7 @@ class QuadTree : public Effect {
     uint32_t diff = 1 + max - min;
     return min + (quadtree_rand % diff);
   }
-  
+
   void quadtree(uint32_t x, uint32_t y, uint32_t s, uint32_t t) {
     for (uint32_t i = 0; i < 4; i++) {
       uint32_t u = x + (i % 2) * s;
@@ -56,7 +56,7 @@ class QuadTree : public Effect {
     }
   }
 
-  public:
+public:
   virtual void drawFrame() {
     static uint32_t t = 0;
     quadtree_rand     = 31415926;
